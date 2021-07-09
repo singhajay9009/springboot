@@ -4,6 +4,7 @@ package com.ajay.eureka.demo.controller;
 import com.ajay.eureka.demo.entity.Contact;
 import com.ajay.eureka.demo.entity.Employee;
 import com.ajay.eureka.demo.service.EmployeeInfoService;
+import com.ajay.eureka.demo.service.EmployeeInfoServiceHystrix;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,9 @@ public class EmployeeController {
     EmployeeInfoService employeeInfoService;
 
     @Autowired
+    EmployeeInfoServiceHystrix employeeInfoServiceHystrix;
+
+    @Autowired
     RestTemplate restTemplate;
 
     @GetMapping("/{id}")
@@ -31,5 +35,12 @@ public class EmployeeController {
 
         employee.setContacts(contacts);
         return employee;
+    }
+
+    @GetMapping("/{empId}")
+    public Employee getEmployeeObjWithHystrixImpl(@PathVariable("empId") Long id){
+
+        employeeInfoServiceHystrix.getEmployee(id);
+        return null;
     }
 }

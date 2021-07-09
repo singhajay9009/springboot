@@ -1,1 +1,10 @@
+spring:
+  application:
+    name: contact-service
 
+server:
+  port: 9002
+
+eureka:
+  instance:
+    hostname: localhost

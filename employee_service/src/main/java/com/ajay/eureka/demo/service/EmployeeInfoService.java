@@ -1,8 +1,11 @@
 package com.ajay.eureka.demo.service;
 
+import com.ajay.eureka.demo.entity.Contact;
 import com.ajay.eureka.demo.entity.Employee;
 import com.ajay.eureka.demo.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -20,4 +23,6 @@ public class EmployeeInfoService implements EmployeeRepository {
     public Employee getEmployee(Long id) {
         return listEmp.stream().filter(e -> e.getId().equals(id)).findAny().orElse(null);
     }
+
+
 }

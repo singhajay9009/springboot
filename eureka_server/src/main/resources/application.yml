@@ -1,9 +1,10 @@
 server:
-  port: 8763
-
+  port: 8761
 eureka:
   client:
     registerWithEureka: false
     fetchRegistry: false
   server:
     waitTimeInMsWhenSyncEmpty: 0
+  instance:
+    hostname: localhost
