@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mywp_1
+    username: postgres
+    password: Rain@11
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
