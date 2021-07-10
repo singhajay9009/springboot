@@ -6,6 +6,7 @@ import com.ajay.spring.demo.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,5 +19,9 @@ public class EmployeeService {
         return optionalEmployee.orElseThrow(() -> new EmployeeNotFoundException(id));
     }
 
+    public List<Employee> getAllEmployees(){
+        List<Employee> empList = employeeRepository.findAll();
+        return Optional.of(empList).orElseThrow(EmployeeNotFoundException::new);
+    }
 
 }

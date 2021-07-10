@@ -8,4 +8,4 @@
 --);
 select 1;
 
---insert into employee (name, age, joining_date, salary, active) values ('Euler', 32, '2016-06-22 19:10:25-07', 34000, 'Y')
+--insert into employee (name, age, joining_date, salary, active) values ('Rita', 23, '2018-07-13 19:10:25-07', 20000, 'Y')
