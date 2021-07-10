@@ -5,6 +5,8 @@ spring:
     password:
     initialization-mode: always
   jpa:
+    hibernate:
+      ddl-auto: update
     generate-ddl: true
     show-sql: true
     properties:
