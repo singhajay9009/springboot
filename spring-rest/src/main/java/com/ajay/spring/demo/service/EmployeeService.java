@@ -24,4 +24,12 @@ public class EmployeeService {
         return Optional.of(empList).orElseThrow(EmployeeNotFoundException::new);
     }
 
+    public Employee createEmployee(Employee employee){
+        return employeeRepository.save(employee);
+    }
+
+    public void deleteEmployee(int id){
+        employeeRepository.deleteById(id);
+    }
+
 }
