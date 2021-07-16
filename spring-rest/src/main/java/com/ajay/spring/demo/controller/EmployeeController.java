@@ -35,29 +35,31 @@ public class EmployeeController {
     private final EmployeeService employeeService;
     private final EmployeeModelAssembler employeeModelAssembler;
 
-    @GetMapping("/")
+    @GetMapping("/all")
     public ResponseEntity<?> fetchEmployees(){
         List<Employee> employees = employeeService.getAllEmployees();
         return ResponseEntity.ok(employees);
     }
 
-    // Another way of creating
-    @GetMapping("/{id}")
-    public EntityModel<Employee> fetchEmployee(@PathVariable("id") int id){
+    // With HATEOAS links. -- does not return id in response
+    @GetMapping("/one/{id}")
+    public EntityModel<Employee> fetchEmployee(@PathVariable int id){
         Employee employee = employeeService.getEmployee(id);
 
-       // return new ResponseEntity<>(employee, HttpStatus.OK);
-       // return ResponseEntity.status(HttpStatus.OK).body(employee);
-
-//        return EntityModel.of(employee,
-//                linkTo(methodOn(EmployeeController.class).fetchEmployee(id)).withSelfRel(),
-//                linkTo(methodOn(EmployeeController.class).fetchEmployees()).withRel("employees"));
-
-        return employeeModelAssembler.toModel(employee);
+        return EntityModel.of(employee,
+                linkTo(methodOn(EmployeeController.class).fetchEmployee(id)).withSelfRel(),
+                linkTo(methodOn(EmployeeController.class).fetchEmployees()).withRel("employees"));
 
     }
 
-    @GetMapping("/all")
+    @GetMapping("/single/{id}")
+    public ResponseEntity<?> fetchSingleEmployee(@PathVariable int id){
+        Employee employee = employeeService.getEmployee(id);
+        return ResponseEntity.ok(employee);
+    }
+
+
+    @GetMapping("/allagain")
     CollectionModel<EntityModel<Employee>> all() {
 
         List<EntityModel<Employee>> employees = employeeService.getAllEmployees().stream() //

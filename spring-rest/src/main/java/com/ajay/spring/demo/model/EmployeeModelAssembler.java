@@ -1,8 +1,8 @@
 package com.ajay.spring.demo.model;
 
+
 import com.ajay.spring.demo.controller.EmployeeController;
 import com.ajay.spring.demo.entity.Employee;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;

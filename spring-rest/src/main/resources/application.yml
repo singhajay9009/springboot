@@ -16,3 +16,11 @@ spring:
 logging:
   level:
     org.hibernate.sql: debug
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+       # exclude: "beans"
+      base-path: /actuator
