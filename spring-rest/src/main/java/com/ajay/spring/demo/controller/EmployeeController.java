@@ -2,10 +2,12 @@ package com.ajay.spring.demo.controller;
 
 import com.ajay.spring.demo.entity.Employee;
 import com.ajay.spring.demo.exceptions.EmployeeNotFoundException;
+import com.ajay.spring.demo.exceptions.NoDataFoundException;
 import com.ajay.spring.demo.model.EmployeeModelAssembler;
 import com.ajay.spring.demo.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.EntityMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
@@ -30,7 +32,10 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 @RequestMapping("/employees")
 @RequiredArgsConstructor
+//@Slf4j
 public class EmployeeController {
+
+    Logger log = LoggerFactory.getLogger(EmployeeController.class);
 
     private final EmployeeService employeeService;
     private final EmployeeModelAssembler employeeModelAssembler;
@@ -38,6 +43,8 @@ public class EmployeeController {
     @GetMapping("/all")
     public ResponseEntity<?> fetchEmployees(){
         List<Employee> employees = employeeService.getAllEmployees();
+        Optional.ofNullable(employees).orElseThrow(NoDataFoundException::new);
+        log.info("All users found");
         return ResponseEntity.ok(employees);
     }
 
@@ -45,7 +52,8 @@ public class EmployeeController {
     @GetMapping("/one/{id}")
     public EntityModel<Employee> fetchEmployee(@PathVariable int id){
         Employee employee = employeeService.getEmployee(id);
-
+        Optional.ofNullable(employee).orElseThrow(() -> new EmployeeNotFoundException(id));
+        log.info("User found with id: {}", id);
         return EntityModel.of(employee,
                 linkTo(methodOn(EmployeeController.class).fetchEmployee(id)).withSelfRel(),
                 linkTo(methodOn(EmployeeController.class).fetchEmployees()).withRel("employees"));
@@ -55,6 +63,7 @@ public class EmployeeController {
     @GetMapping("/single/{id}")
     public ResponseEntity<?> fetchSingleEmployee(@PathVariable int id){
         Employee employee = employeeService.getEmployee(id);
+        log.info("User found with id for single end point: {}", id);
         return ResponseEntity.ok(employee);
     }
 
@@ -113,11 +122,9 @@ public class EmployeeController {
         emp.setAge(employee.getAge());
         emp.setActive(employee.isActive());
 
-
-
         EntityModel<Employee> entityModel =
                 employeeModelAssembler.toModel(employeeService.createEmployee(emp));
-
+        log.info("user is created with id: {}", entityModel.getContent().getId());
         return ResponseEntity //
                 .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
                 .body(entityModel);
@@ -125,9 +132,8 @@ public class EmployeeController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable int id){
-
-        Optional.ofNullable(employeeService.getEmployee(id)).orElseThrow(() -> new EmployeeNotFoundException(id));
         employeeService.deleteEmployee(id);
+        log.info("User is deleted with id: {}", id);
         return ResponseEntity.status(HttpStatus.OK).body("record deleted");
     }
 

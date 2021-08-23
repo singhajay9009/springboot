@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: spring-rest
   datasource:
     url: jdbc:postgresql://localhost:5432/mywp_2
     username: postgres
@@ -14,8 +16,10 @@ spring:
         format_sql: true
 
 logging:
-  level:
-    org.hibernate.sql: debug
+  file:
+    name: elk.log
+  #level:
+    #org.hibernate.sql: debug
 
 management:
   endpoints:
@@ -23,4 +27,15 @@ management:
       exposure:
         include: "*"
        # exclude: "beans"
-      base-path: /actuator
+      #base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+      #//jmx is only to get jmx end points
+    jmx:
+      exposure:
+        include: "health,info,bean"
+info:
+  app:
+    name: Employee Management App
+    description: This is to demonstrate Employee records REST API using Springboot and Postgres
