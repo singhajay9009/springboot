@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 /* Controller Advice is used to provide exception handling
- C
+ This annotation makes this class shared among all controller classes
  */
 @ControllerAdvice
 public class ExceptionAdvice {

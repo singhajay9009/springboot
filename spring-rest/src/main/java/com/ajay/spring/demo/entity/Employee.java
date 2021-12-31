@@ -66,8 +66,10 @@ public class Employee {
         return id == employee.id && age == employee.age && salary == employee.salary && active == employee.active && Objects.equals(name, employee.name) && Objects.equals(joiningDate, employee.joiningDate);
     }
 
+
     @Override
     public int hashCode() {
+
         return Objects.hash(id, name, age, salary, joiningDate, active);
     }
 

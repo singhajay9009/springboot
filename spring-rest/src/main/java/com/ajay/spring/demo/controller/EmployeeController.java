@@ -4,6 +4,7 @@ import com.ajay.spring.demo.entity.Employee;
 import com.ajay.spring.demo.exceptions.EmployeeNotFoundException;
 import com.ajay.spring.demo.exceptions.NoDataFoundException;
 import com.ajay.spring.demo.model.EmployeeModelAssembler;
+import com.ajay.spring.demo.repository.EmployeeRepository;
 import com.ajay.spring.demo.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -14,7 +15,9 @@ import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -39,6 +42,8 @@ public class EmployeeController {
 
     private final EmployeeService employeeService;
     private final EmployeeModelAssembler employeeModelAssembler;
+
+    private final EmployeeRepository employeeRepository;
 
     @GetMapping("/all")
     public ResponseEntity<?> fetchEmployees(){
@@ -125,9 +130,52 @@ public class EmployeeController {
         EntityModel<Employee> entityModel =
                 employeeModelAssembler.toModel(employeeService.createEmployee(emp));
         log.info("user is created with id: {}", entityModel.getContent().getId());
+
+        /* == we can return below URi in the location header to access the created
+              resource  ====
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/one/{id}")
+                .buildAndExpand(emp.getId())
+                .toUri();
+            return ResponseEntity<Employee>.created(location).build();
+        */
+
         return ResponseEntity //
                 .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
                 .body(entityModel);
+    }
+
+    @PutMapping("/employee/update/{id}")
+    public ResponseEntity<EntityModel> updateEmployee(@RequestBody Employee employee, @PathVariable int id){
+
+        Employee updatedEmp = employeeRepository.findById(id)
+                .map(emp -> {
+                    emp.setName(employee.getName());
+                    emp.setActive(employee.isActive());
+                    emp.setAge(employee.getAge());
+                    emp.setSalary(employee.getSalary());
+                    emp.setJoiningDate(employee.getJoiningDate());
+                    return employeeService.createEmployee(emp);
+                }).orElseGet(() ->{
+                    employee.setId(id);
+                    return employeeService.createEmployee(employee);
+                        }
+
+                );
+
+        /*  sending href to 'location' header to access employee ---
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/single/{id}")
+                .buildAndExpand(id).toUri();
+         return ResponseEntity.created(uri).body("employee updated");
+         */
+
+
+        EntityModel<Employee> entityModel = employeeModelAssembler.toModel(updatedEmp);
+        return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(entityModel);
+
     }
 
     @DeleteMapping("/delete/{id}")
