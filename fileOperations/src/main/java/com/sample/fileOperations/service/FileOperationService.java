@@ -99,4 +99,9 @@ public class FileOperationService implements FileOperations{
     public void deleteAll() {
         FileSystemUtils.deleteRecursively(path.toFile());
     }
+
+    @Override
+    public void delete(String fileName){
+        FileSystemUtils.deleteRecursively(path.resolve(fileName).toFile());
+    }
 }

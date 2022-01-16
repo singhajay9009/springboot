@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.io.FileNotFoundException;
-
 @ControllerAdvice
 public class ExceptionAdvice {
 
@@ -16,6 +14,13 @@ public class ExceptionAdvice {
     @ExceptionHandler(FileUploadException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String fileUploadExceptionHandler(FileUploadException ex){
+        return ex.getMessage();
+    }
+
+    @ResponseBody
+    @ExceptionHandler(FileDeleteException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String fileDeleteExceptionHandler(FileDeleteException ex){
         return ex.getMessage();
     }
 }

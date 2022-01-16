@@ -19,4 +19,6 @@ public interface FileOperations {
     Resource loadAsResource(String fileName);
 
     void deleteAll();
+
+    void delete(String fileName);
 }
