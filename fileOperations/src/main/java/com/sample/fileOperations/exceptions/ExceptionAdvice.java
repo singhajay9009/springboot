@@ -23,4 +23,12 @@ public class ExceptionAdvice {
     public String fileDeleteExceptionHandler(FileDeleteException ex){
         return ex.getMessage();
     }
+
+    @ResponseBody
+    @ExceptionHandler(FileDownloadException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String fileUploadExceptionHandler(FileDownloadException ex){
+        return ex.getMessage();
+    }
+
 }

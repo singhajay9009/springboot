@@ -49,7 +49,7 @@ public class FileOperationService implements FileOperations{
                     Paths.get(multipartFile.getOriginalFilename()))
                             .normalize()
                             .toAbsolutePath();
-            if(destinationFile.getParent().equals(this.path.toAbsolutePath())){
+            if(!destinationFile.getParent().equals(this.path.toAbsolutePath())){
                 throw new FileOperationException("Cannot store file outside current dir");
             }
             try(InputStream inputStream = multipartFile.getInputStream()){
