@@ -1,2 +1,8 @@
-package com.example.webClient.controller;public class SampleAPIController {
+package com.example.webClient.controller;
+
+
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController 
+public class SampleAPIController {
 }

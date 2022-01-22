@@ -55,14 +55,15 @@ public class EmployeeController {
 
     // With HATEOAS links. -- does not return id in response
     @GetMapping("/one/{id}")
-    public EntityModel<Employee> fetchEmployee(@PathVariable int id){
+    public ResponseEntity<EntityModel<Employee>> fetchEmployee(@PathVariable int id){
         Employee employee = employeeService.getEmployee(id);
         Optional.ofNullable(employee).orElseThrow(() -> new EmployeeNotFoundException(id));
         log.info("User found with id: {}", id);
-        return EntityModel.of(employee,
+        EntityModel<Employee> em =  EntityModel.of(employee,
                 linkTo(methodOn(EmployeeController.class).fetchEmployee(id)).withSelfRel(),
                 linkTo(methodOn(EmployeeController.class).fetchEmployees()).withRel("employees"));
 
+        return ResponseEntity.status(HttpStatus.OK).body(em);
     }
 
     @GetMapping("/single/{id}")
