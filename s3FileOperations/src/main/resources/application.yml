@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: s3FileOperations
+
+cloud:
+  aws:
+    credentials:
+      access-key: AKIA5MWEVGTNNUMQSJWK
+      secret-key: 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
+    region:
+      static: us-east-2
+    stack:
+      auto: false
+    bucket:
+      name: kunde-auftrage
