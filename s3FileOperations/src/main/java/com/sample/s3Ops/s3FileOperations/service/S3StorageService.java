@@ -29,15 +29,16 @@ public class S3StorageService {
 
     private final AmazonS3 s3Client;
 
-    public String uploadFile(MultipartFile multipartFile, String fileName) throws Exception {
+    public String uploadFile(MultipartFile multipartFile) throws Exception {
         Optional.ofNullable(multipartFile).orElseThrow(() ->
                 new IllegalArgumentException("Multipart File can not be null"));
 
         File file = new File(Objects.requireNonNull(multipartFile.getOriginalFilename()));
         FileOutputStream fos = new FileOutputStream(file);
+        String fileName = multipartFile.getOriginalFilename();
         try{
             fos.write(multipartFile.getBytes());
-            s3Client.putObject(new PutObjectRequest(awsConfigProperties.getBucket(), fileName, file));
+            s3Client.putObject(new PutObjectRequest(awsConfigProperties.getBucket(), fileName,file));
             file.delete();
         }catch(IOException e){
             throw new Exception("Error in uploading file: " + file.getName(), e);
@@ -57,7 +58,8 @@ public class S3StorageService {
         }
     }
 
-    public String deleteFile(String bucketName, String fileName){
+    public String deleteFile(String fileName){
+        String bucketName = awsConfigProperties.getBucket();
         s3Client.deleteObject(bucketName, fileName);
         return "File: " + fileName + " deleted successfully";
     }

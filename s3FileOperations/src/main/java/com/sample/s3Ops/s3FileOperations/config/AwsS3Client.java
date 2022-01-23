@@ -10,12 +10,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 @Component
-public class S3Client {
+public class AwsS3Client {
 
     private final S3ConfigProperties s3ConfigProperties;
 
     @Autowired
-    public S3Client(final S3ConfigProperties s3ConfigProperties) {
+    public AwsS3Client(final S3ConfigProperties s3ConfigProperties) {
         this.s3ConfigProperties = s3ConfigProperties;
     }
 

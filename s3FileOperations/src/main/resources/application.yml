@@ -13,3 +13,10 @@ cloud:
       auto: false
     bucket:
       name: kunde-auftrage
+
+logging:
+  level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
