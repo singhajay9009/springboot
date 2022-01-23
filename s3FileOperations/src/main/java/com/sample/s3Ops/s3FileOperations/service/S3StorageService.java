@@ -11,10 +11,15 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.sample.s3Ops.s3FileOperations.config.S3ConfigProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,9 +29,21 @@ public class S3StorageService {
 
     private final AmazonS3 s3Client;
 
-    public String uploadFile(File file, String fileName) {
-        s3Client.putObject(new PutObjectRequest(awsConfigProperties.getBucket(), fileName, file));
-        file.delete();
+    public String uploadFile(MultipartFile multipartFile, String fileName) throws Exception {
+        Optional.ofNullable(multipartFile).orElseThrow(() ->
+                new IllegalArgumentException("Multipart File can not be null"));
+
+        File file = new File(Objects.requireNonNull(multipartFile.getOriginalFilename()));
+        FileOutputStream fos = new FileOutputStream(file);
+        try{
+            fos.write(multipartFile.getBytes());
+            s3Client.putObject(new PutObjectRequest(awsConfigProperties.getBucket(), fileName, file));
+            file.delete();
+        }catch(IOException e){
+            throw new Exception("Error in uploading file: " + file.getName(), e);
+        }finally{
+            fos.close();
+        }
         return "File: " + fileName + "uploaded successfully...";
     }
 
