@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @Setter @Getter
-public class AwsConfigProperties {
+public class S3ConfigProperties {
 
     @Value("${cloud.aws.credentials.access-key}")
     private String accessKey;
@@ -19,5 +19,8 @@ public class AwsConfigProperties {
 
     @Value("${cloud.aws.region.static}")
     private String region;
+
+    @Value("${cloud.aws.bucket.name}")
+    private String bucket;
 
 }
