@@ -50,7 +50,7 @@ public class FileOperationsController {
         }
     }
 
-@PostMapping("/uploadAll")
+    @PostMapping("/uploadAll")
     public ResponseEntity<List<EntityModel<FileData>>> uploadAll(@RequestParam("files") MultipartFile[] files, HttpServletRequest request){
         try{
 
